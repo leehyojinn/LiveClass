@@ -72,7 +72,7 @@ export function Step3Review() {
     mutate(payload, {
       onSuccess: (data) => {
         setSubmittedEnrollment(data);
-        reset();
+        // reset()은 완료 페이지에서 호출 — 완료 페이지가 step1/2 데이터로 요약 정보를 표시해야 하므로
         router.push(`/enrollment/complete?id=${data.enrollmentId}&status=${data.status}`);
       },
     });
