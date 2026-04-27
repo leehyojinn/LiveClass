@@ -39,7 +39,7 @@ export const step2GroupSchema = z
     ...applicantSchema.shape,
     organizationName: z.string().min(1, "단체명을 입력해주세요."),
     headCount: z
-      .number({ invalid_type_error: "인원수를 입력해주세요." })
+      .number({ error: "인원수를 입력해주세요." })
       .min(2, "단체 신청 인원은 최소 2명이어야 합니다.")
       .max(10, "단체 신청 인원은 최대 10명이어야 합니다."),
     participants: z
