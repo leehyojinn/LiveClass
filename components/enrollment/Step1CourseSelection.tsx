@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEnrollmentStore } from "@/store/enrollmentStore";
@@ -23,6 +23,9 @@ export function Step1CourseSelection() {
     show: boolean;
     newType: EnrollmentType | null;
   }>({ show: false, newType: null });
+
+  const courseListRef = useRef<HTMLDivElement>(null);
+  const enrollmentTypeRef = useRef<HTMLDivElement>(null);
 
   const { data, isLoading, isError, refetch } = useCoursesQuery(selectedCategory);
 
@@ -66,10 +69,19 @@ export function Step1CourseSelection() {
     nextStep();
   }
 
+  function onInvalid() {
+    // 에러가 있는 첫 번째 섹션으로 스크롤
+    if (errors.courseId) {
+      courseListRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    } else if (errors.enrollmentType) {
+      enrollmentTypeRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
+
   const selectedCourse = data?.courses.find((c) => c.id === currentCourseId);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form onSubmit={handleSubmit(onSubmit, onInvalid)} noValidate>
       {/* 카테고리 탭 */}
       <div className="mb-6">
         <h2 className="mb-3 text-base font-semibold text-gray-700">카테고리</h2>
@@ -105,7 +117,7 @@ export function Step1CourseSelection() {
       </div>
 
       {/* 강의 목록 */}
-      <div className="mb-6">
+      <div className="mb-6" ref={courseListRef}>
         <h2 className="mb-3 text-base font-semibold text-gray-700">
           강의 선택 <span className="text-red-500">*</span>
         </h2>
@@ -181,7 +193,7 @@ export function Step1CourseSelection() {
       )}
 
       {/* 신청 유형 선택 */}
-      <div className="mb-8">
+      <div className="mb-8" ref={enrollmentTypeRef}>
         <h2 className="mb-3 text-base font-semibold text-gray-700">
           신청 유형 <span className="text-red-500">*</span>
         </h2>
