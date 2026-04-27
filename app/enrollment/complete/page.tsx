@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEnrollmentStore } from "@/store/enrollmentStore";
 import { useCoursesQuery } from "@/lib/queries/courses";
@@ -17,10 +17,14 @@ function CompleteContent() {
 
   const selectedCourse = coursesData?.courses.find((c) => c.id === step1?.courseId);
 
-  if (!enrollmentId) {
-    router.replace("/enrollment");
-    return null;
-  }
+  // 직접 URL 접근 시 신청 페이지로 리다이렉트
+  useEffect(() => {
+    if (!enrollmentId) {
+      router.replace("/enrollment");
+    }
+  }, [enrollmentId, router]);
+
+  if (!enrollmentId) return null;
 
   function handleNewEnrollment() {
     reset();
