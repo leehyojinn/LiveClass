@@ -1,17 +1,16 @@
 "use client";
 
-import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEnrollmentStore } from "@/store/enrollmentStore";
 import { useCoursesQuery } from "@/lib/queries/courses";
-import { useEnrollmentMutation } from "@/lib/queries/enrollments";
+import { useEnrollmentMutation, BusinessError } from "@/lib/queries/enrollments";
 import { step3Schema, type Step3FormValues } from "@/lib/validations/step3Schema";
 import { formatPrice, formatDateRange, cn } from "@/lib/utils";
-import type { ErrorResponse, FormStep } from "@/types/enrollment";
+import type { FormStep } from "@/types/enrollment";
 
-const ERROR_MESSAGES: Record<string, string> = {
+const BUSINESS_ERROR_MESSAGES: Record<string, string> = {
   COURSE_FULL: "선택하신 강의의 정원이 초과되었습니다. 다른 강의를 선택해주세요.",
   DUPLICATE_ENROLLMENT: "이미 해당 강의에 신청하셨습니다.",
   INVALID_INPUT: "입력 정보에 오류가 있습니다. 내용을 다시 확인해주세요.",
@@ -24,7 +23,6 @@ export function Step3Review() {
     useEnrollmentStore();
   const { data: coursesData } = useCoursesQuery();
   const { mutate, isPending, error, reset: resetMutation } = useEnrollmentMutation();
-  const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const selectedCourse = coursesData?.courses.find((c) => c.id === step1?.courseId);
 
@@ -78,25 +76,34 @@ export function Step3Review() {
     });
   }
 
-  const apiError = error as ErrorResponse | null;
-  const isCourseFull = apiError?.code === "COURSE_FULL";
-  const isDuplicate = apiError?.code === "DUPLICATE_ENROLLMENT";
+  // 비즈니스 에러(서버 오류 코드)와 네트워크 에러를 구분
+  const isBusinessError = error instanceof BusinessError;
+  const businessErrorCode = isBusinessError ? error.payload.code : null;
+  const isCourseFull = businessErrorCode === "COURSE_FULL";
+  const isDuplicate = businessErrorCode === "DUPLICATE_ENROLLMENT";
+
+  function getErrorMessage(): string {
+    if (!error) return "";
+    if (isBusinessError) {
+      return BUSINESS_ERROR_MESSAGES[error.payload.code] ?? error.payload.message;
+    }
+    // 네트워크 에러 (fetch 실패, 파싱 실패 등)
+    return error.message || "알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      {/* API 에러 메시지 */}
-      {apiError && (
+      {/* 에러 메시지 (비즈니스 에러 / 네트워크 에러 모두 표시) */}
+      {error && (
         <div
           className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4"
           role="alert"
           aria-live="polite"
         >
           <p className="mb-1 text-sm font-semibold text-red-800">
-            {isCourseFull || isDuplicate ? "신청 불가" : "제출 실패"}
+            {isCourseFull || isDuplicate ? "신청 불가" : isBusinessError ? "제출 실패" : "네트워크 오류"}
           </p>
-          <p className="text-sm text-red-700">
-            {ERROR_MESSAGES[apiError.code] ?? "알 수 없는 오류가 발생했습니다."}
-          </p>
+          <p className="text-sm text-red-700">{getErrorMessage()}</p>
           {isCourseFull && (
             <button
               type="button"
@@ -223,7 +230,6 @@ export function Step3Review() {
           ← 이전 단계
         </button>
         <button
-          ref={submitButtonRef}
           type="submit"
           disabled={isPending}
           className={cn(
