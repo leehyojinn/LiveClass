@@ -220,12 +220,12 @@ export function Step3Review() {
       </div>
 
       {/* 하단 버튼 */}
-      <div className="mt-8 flex justify-between">
+      <div className="mt-6 flex flex-col-reverse gap-2 sm:mt-8 sm:flex-row sm:justify-between">
         <button
           type="button"
           onClick={prevStep}
           disabled={isPending}
-          className="rounded-xl border border-gray-300 px-6 py-3 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
+          className="rounded-xl border border-gray-300 py-3 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 sm:px-6"
         >
           ← 이전 단계
         </button>
@@ -233,7 +233,7 @@ export function Step3Review() {
           type="submit"
           disabled={isPending}
           className={cn(
-            "flex items-center gap-2 rounded-xl px-8 py-3 text-sm font-semibold text-white transition-colors",
+            "flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white transition-colors sm:px-8",
             isPending
               ? "cursor-not-allowed bg-blue-400"
               : "bg-blue-600 hover:bg-blue-700 active:bg-blue-800"
@@ -289,9 +289,9 @@ function ReviewRow({
   multiline?: boolean;
 }) {
   return (
-    <div className={cn("flex gap-3", multiline ? "flex-col" : "items-start")}>
-      <span className="w-24 shrink-0 text-gray-500">{label}</span>
-      <span className={cn("font-medium text-gray-800", multiline && "whitespace-pre-wrap")}>
+    <div className={cn("flex gap-2", multiline ? "flex-col" : "flex-col xs:flex-row xs:items-start sm:flex-row sm:items-start")}>
+      <span className="shrink-0 text-gray-500 xs:w-24 sm:w-24">{label}</span>
+      <span className={cn("font-medium text-gray-800 break-all", multiline && "whitespace-pre-wrap")}>
         {value}
       </span>
     </div>

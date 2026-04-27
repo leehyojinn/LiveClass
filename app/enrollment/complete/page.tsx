@@ -32,7 +32,7 @@ function CompleteContent() {
   }
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-2xl px-4 py-12">
+    <main className="mx-auto min-h-screen w-full max-w-2xl px-4 py-8 sm:py-12">
       <div className="text-center">
         {/* 성공 아이콘 */}
         <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
@@ -130,9 +130,9 @@ function CompleteContent() {
 
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex gap-3">
-      <span className="w-20 shrink-0 text-gray-500">{label}</span>
-      <span className="font-medium text-gray-800">{value}</span>
+    <div className="flex flex-col gap-0.5 xs:flex-row xs:gap-3 sm:flex-row sm:gap-3">
+      <span className="shrink-0 text-gray-500 xs:w-20 sm:w-20">{label}</span>
+      <span className="font-medium text-gray-800 break-all">{value}</span>
     </div>
   );
 }

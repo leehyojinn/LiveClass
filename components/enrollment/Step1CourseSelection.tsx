@@ -83,14 +83,14 @@ export function Step1CourseSelection() {
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)} noValidate>
       {/* 카테고리 탭 */}
-      <div className="mb-6">
-        <h2 className="mb-3 text-base font-semibold text-gray-700">카테고리</h2>
-        <div className="flex flex-wrap gap-2">
+      <div className="mb-5 sm:mb-6">
+        <h2 className="mb-2.5 text-sm font-semibold text-gray-700 sm:mb-3 sm:text-base">카테고리</h2>
+        <div className="flex flex-wrap gap-1.5 sm:gap-2">
           <button
             type="button"
             onClick={() => setSelectedCategory(undefined)}
             className={cn(
-              "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
+              "rounded-full px-3 py-1 text-xs font-medium transition-colors sm:px-4 sm:py-1.5 sm:text-sm",
               selectedCategory === undefined
                 ? "bg-blue-600 text-white"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -104,7 +104,7 @@ export function Step1CourseSelection() {
               type="button"
               onClick={() => setSelectedCategory(cat)}
               className={cn(
-                "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
+                "rounded-full px-3 py-1 text-xs font-medium transition-colors sm:px-4 sm:py-1.5 sm:text-sm",
                 selectedCategory === cat
                   ? "bg-blue-600 text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -117,8 +117,8 @@ export function Step1CourseSelection() {
       </div>
 
       {/* 강의 목록 */}
-      <div className="mb-6" ref={courseListRef}>
-        <h2 className="mb-3 text-base font-semibold text-gray-700">
+      <div className="mb-5 sm:mb-6" ref={courseListRef}>
+        <h2 className="mb-2.5 text-sm font-semibold text-gray-700 sm:mb-3 sm:text-base">
           강의 선택 <span className="text-red-500">*</span>
         </h2>
 
@@ -193,26 +193,26 @@ export function Step1CourseSelection() {
       )}
 
       {/* 신청 유형 선택 */}
-      <div className="mb-8" ref={enrollmentTypeRef}>
-        <h2 className="mb-3 text-base font-semibold text-gray-700">
+      <div className="mb-6 sm:mb-8" ref={enrollmentTypeRef}>
+        <h2 className="mb-2.5 text-sm font-semibold text-gray-700 sm:mb-3 sm:text-base">
           신청 유형 <span className="text-red-500">*</span>
         </h2>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
           {(["personal", "group"] as const).map((type) => (
             <button
               key={type}
               type="button"
               onClick={() => handleEnrollmentTypeChange(type)}
               className={cn(
-                "flex flex-col items-center rounded-xl border-2 p-4 text-sm font-medium transition-all",
+                "flex flex-col items-center rounded-xl border-2 p-3 text-sm font-medium transition-all sm:p-4",
                 currentEnrollmentType === type
                   ? "border-blue-600 bg-blue-50 text-blue-700"
                   : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
               )}
               aria-pressed={currentEnrollmentType === type}
             >
-              <span className="mb-1 text-2xl">{type === "personal" ? "👤" : "👥"}</span>
-              <span>{type === "personal" ? "개인 신청" : "단체 신청"}</span>
+              <span className="mb-1 text-xl sm:text-2xl">{type === "personal" ? "👤" : "👥"}</span>
+              <span className="text-xs sm:text-sm">{type === "personal" ? "개인 신청" : "단체 신청"}</span>
               {type === "group" && (
                 <span className="mt-0.5 text-xs font-normal text-gray-400">2~10명</span>
               )}
@@ -230,7 +230,7 @@ export function Step1CourseSelection() {
       <div className="flex justify-end">
         <button
           type="submit"
-          className="rounded-xl bg-blue-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 active:bg-blue-800"
+          className="w-full rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 active:bg-blue-800 sm:w-auto sm:px-8"
         >
           다음 단계 →
         </button>

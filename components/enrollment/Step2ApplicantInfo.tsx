@@ -395,17 +395,17 @@ function GroupForm({
 
 function StepNavigation({ onPrev }: { onPrev: () => void }) {
   return (
-    <div className="mt-8 flex justify-between">
+    <div className="mt-6 flex flex-col-reverse gap-2 sm:mt-8 sm:flex-row sm:justify-between">
       <button
         type="button"
         onClick={onPrev}
-        className="rounded-xl border border-gray-300 px-6 py-3 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50"
+        className="rounded-xl border border-gray-300 py-3 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 sm:px-6"
       >
         ← 이전 단계
       </button>
       <button
         type="submit"
-        className="rounded-xl bg-blue-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 active:bg-blue-800"
+        className="rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 active:bg-blue-800 sm:px-8"
       >
         다음 단계 →
       </button>
