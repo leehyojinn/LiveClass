@@ -171,7 +171,7 @@ function GroupForm({
     mode: "onBlur",
   });
 
-  const { fields, append, remove, replace } = useFieldArray({
+  const { fields, append, replace } = useFieldArray({
     control,
     name: "participants",
   });
@@ -204,8 +204,8 @@ function GroupForm({
 
   function onInvalid() {
     // 첫 번째 에러 필드로 포커스 이동
-    const fields = ["name", "email", "phone", "organizationName", "contactPerson"] as const;
-    const firstField = fields.find((f) => errors[f]);
+    const errorFieldNames = ["name", "email", "phone", "organizationName", "contactPerson"] as const;
+    const firstField = errorFieldNames.find((f) => errors[f]);
     if (firstField) {
       setFocus(firstField);
       return;
