@@ -12,6 +12,9 @@ import {
 } from "@/lib/validations/step2Schema";
 import { FormField, TextareaField } from "@/components/ui/FormField";
 import { formatPhone, cn } from "@/lib/utils";
+import type { Step2Data } from "@/types/enrollment";
+
+type SetStep2DataFn = (data: Step2Data) => void;
 
 export function Step2ApplicantInfo() {
   const { step1, step2, setStep2Data, nextStep, prevStep } = useEnrollmentStore();
@@ -43,7 +46,7 @@ function PersonalForm({
   prevStep,
 }: {
   defaultValues?: Partial<Step2PersonalFormValues>;
-  setStep2Data: ReturnType<typeof useEnrollmentStore>["setStep2Data"];
+  setStep2Data: SetStep2DataFn;
   nextStep: () => void;
   prevStep: () => void;
 }) {
@@ -68,7 +71,7 @@ function PersonalForm({
   const motivationValue = watch("motivation") ?? "";
 
   function onSubmit(values: Step2PersonalFormValues) {
-    setStep2Data(values);
+    setStep2Data({ ...values, motivation: values.motivation ?? "" });
     nextStep();
   }
 
@@ -129,7 +132,7 @@ function GroupForm({
   prevStep,
 }: {
   defaultValues?: Partial<Step2GroupFormValues>;
-  setStep2Data: ReturnType<typeof useEnrollmentStore>["setStep2Data"];
+  setStep2Data: SetStep2DataFn;
   nextStep: () => void;
   prevStep: () => void;
 }) {
@@ -186,7 +189,7 @@ function GroupForm({
   }, [headCount, fields, append, replace]);
 
   function onSubmit(values: Step2GroupFormValues) {
-    setStep2Data(values);
+    setStep2Data({ ...values, motivation: values.motivation ?? "" });
     nextStep();
   }
 
