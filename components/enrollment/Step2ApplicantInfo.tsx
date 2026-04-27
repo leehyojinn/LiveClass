@@ -53,6 +53,7 @@ function PersonalForm({
   const {
     register,
     handleSubmit,
+    setFocus,
     setValue,
     watch,
     formState: { errors },
@@ -75,8 +76,15 @@ function PersonalForm({
     nextStep();
   }
 
+  function onInvalid() {
+    const firstError = (["name", "email", "phone"] as const).find((f) => errors[f]);
+    if (firstError) {
+      setFocus(firstError);
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form onSubmit={handleSubmit(onSubmit, onInvalid)} noValidate>
       <div className="space-y-5">
         <FormField
           label="이름"
@@ -142,6 +150,7 @@ function GroupForm({
     control,
     watch,
     setValue,
+    setFocus,
     formState: { errors },
   } = useForm<Step2GroupFormValues>({
     resolver: zodResolver(step2GroupSchema),
@@ -193,8 +202,30 @@ function GroupForm({
     nextStep();
   }
 
+  function onInvalid() {
+    // 첫 번째 에러 필드로 포커스 이동
+    const fields = ["name", "email", "phone", "organizationName", "contactPerson"] as const;
+    const firstField = fields.find((f) => errors[f]);
+    if (firstField) {
+      setFocus(firstField);
+      return;
+    }
+    // 참가자 명단 에러 처리
+    if (errors.participants) {
+      const idx = Array.isArray(errors.participants)
+        ? errors.participants.findIndex((p) => p?.name || p?.email)
+        : 0;
+      const targetIdx = idx >= 0 ? idx : 0;
+      if (errors.participants[targetIdx]?.name) {
+        setFocus(`participants.${targetIdx}.name`);
+      } else if (errors.participants[targetIdx]?.email) {
+        setFocus(`participants.${targetIdx}.email`);
+      }
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form onSubmit={handleSubmit(onSubmit, onInvalid)} noValidate>
       <div className="space-y-8">
         {/* 신청자 정보 */}
         <section>
