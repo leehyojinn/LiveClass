@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
 import { useEnrollmentStore } from "@/store/enrollmentStore";
 import { StepIndicator } from "@/components/ui/StepIndicator";
 import { Step1CourseSelection } from "@/components/enrollment/Step1CourseSelection";
 import { Step2ApplicantInfo } from "@/components/enrollment/Step2ApplicantInfo";
 import { Step3Review } from "@/components/enrollment/Step3Review";
-import { useBeforeUnload } from "@/hooks/useBeforeUnload";
+import { useBeforeUnload, useBlockBackNavigation } from "@/hooks/useBeforeUnload";
 
 const STEP_TITLES = {
   1: "강의 선택",
@@ -17,9 +16,10 @@ const STEP_TITLES = {
 export default function EnrollmentPage() {
   const { currentStep, step1, step2 } = useEnrollmentStore();
 
-  // 입력 중일 때 이탈 방지
+  // 입력 중일 때 이탈 방지 (닫기/새로고침 + 뒤로가기)
   const hasInput = !!(step1 || step2);
   useBeforeUnload(hasInput);
+  useBlockBackNavigation(hasInput);
 
   return (
     <main className="mx-auto min-h-screen w-full max-w-2xl px-4 py-8 sm:px-6 lg:py-12">
